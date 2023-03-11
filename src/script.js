@@ -30,7 +30,7 @@ let entries
 
 let currseed = BigInt(DEFAULT_SEED)
 let gold = 1
-let blaze = 1
+let blazes = 1
 
 seedinput.addEventListener('input', () => {
     const tempseed = parseLong(seedinput.value)
@@ -74,8 +74,8 @@ blazeinput.addEventListener('input', () => {
         return
     }
 
-    blaze = tempblaze
-    blazeslider.value = Math.min(Math.max(blaze, blazeslider.min), blazeslider.max)
+    blazes = tempblaze
+    blazeslider.value = Math.min(Math.max(blazes, blazeslider.min), blazeslider.max)
     refreshBlaze()
 })
 
@@ -85,8 +85,8 @@ blazeslider.addEventListener('input', () => {
         return
     }
 
-    blaze = tempblaze
-    blazeinput.value = blaze
+    blazes = tempblaze
+    blazeinput.value = blazes
     refreshBlaze()
 })
 
@@ -120,11 +120,12 @@ function refreshSeed() {
 }
 
 function refreshGold() { 
-    const goldrandom = new JavaRandom(currseed)
+    const rngState = new RNGState(currseed)
+    const barterstate = new PiglinBarterState()
     const res = {}
 
     for (let i=0; i < gold; i++) {
-        const nextBarter = getNextBarter(goldrandom)
+        const nextBarter = barterstate.getBarteredItem(rngState.getRandom(RNGState.Type.BARTER))
         add(res, nextBarter.item, nextBarter.amount)
     }
 
@@ -140,17 +141,6 @@ function refreshGold() {
         row.appendChild(amountdisp)
         bartersout.appendChild(row)
     }
-}
-
-function getNextBarter(random) {
-    const res = {}
-    let j = random.nextInt(423n)
-    for (let entry of entries) {
-        if ((j -= entry['weight']) >= 0) continue;
-        let amount = getAmount(entry, random)
-        return {'item': entry.name, 'amount': amount}
-    }
-    return res
 }
 
 function getAmount(entry, random) {
@@ -170,13 +160,13 @@ function getAmount(entry, random) {
 }
 
 function refreshBlaze() {
-    const blazerandom = new JavaRandom(currseed)
+    const rngstate = new RNGState(currseed)
     const res = {}
 
     blazelist.replaceChildren()
     blazelist.appendChild(createIcon('img/iron_sword.png'))
-    for (let i=0; i < blaze; i++) {
-        const nextBlazeDrop = getNextBlazeDrop(blazerandom)
+    for (let i=0; i < blazes; i++) {
+        const nextBlazeDrop = getNextBlazeDrop(rngstate.getRandom(RNGState.Type.BLAZE), i)
         if (nextBlazeDrop.amount) {
             blazelist.appendChild(createIcon('img/blazewithrod.png', 'drop'))
         } else {
@@ -198,15 +188,18 @@ function refreshBlaze() {
     }
 }
 
-function getNextBlazeDrop(random) {
+function getNextBlazeDrop(random, blaze) {
     //assume no looting
     //one function: set count 0 to 1
+    if (blaze > 20) return {'item': 'minecraft:blaze_rod', 'amount': 1n};
+
     let amount = helperNextInt(random, 0n, 1n)
     return {'item': 'minecraft:blaze_rod', 'amount': amount}
 }
 
 function refreshGravel() {
-    const gravelrandom = new JavaRandom(currseed)
+    const rngstate = new RNGState(currseed)
+    const gravelrandom = rngstate.getRandom(RNGState.Type.FLINT)
     let count = 0
     do {
         count++

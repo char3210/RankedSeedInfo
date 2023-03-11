@@ -34,7 +34,7 @@ class JavaRandom {
         else {
             for (let u = r;
                 u - (r = u % bound) + m < 0;
-                u = this.next(31));
+                u = this.next(31n));
         }
         return r
     }
