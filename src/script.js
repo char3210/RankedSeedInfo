@@ -67,6 +67,26 @@ goldslider.addEventListener('input', () => {
     refreshGold()
 })
 
+for (let d of ['-9', '-1', '+1', '+9']) {
+    document.getElementById("gold"+d).addEventListener('click', () => {
+        gold += parseInt(d)
+        if (gold < 0) gold = 0
+        if (gold > 500) gold = 500
+        goldslider.value = Math.min(Math.max(gold, goldslider.min), goldslider.max);
+        goldinput.value = gold
+        refreshGold()
+    })
+}
+
+for (let blocks of [4, 6, 8, 10]) {
+    document.getElementById("gold"+blocks+"b").addEventListener('click', () => {
+        gold = blocks * 9
+        goldslider.value = Math.min(Math.max(gold, goldslider.min), goldslider.max);
+        goldinput.value = gold
+        refreshGold()
+    })
+}
+
 filter.addEventListener('input', () => {
     refreshGold()
 })
