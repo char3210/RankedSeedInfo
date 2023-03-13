@@ -20,6 +20,9 @@ const bartersout = document.getElementById("items")
 
 const blazeinput = document.getElementById("blazeinput")
 const blazeslider = document.getElementById("blazeslider")
+const fivelabel = document.getElementById("5rodskilled")
+const sixlabel = document.getElementById("6rodskilled")
+const sevenlabel = document.getElementById("7rodskilled")
 const blazeout = document.getElementById("rods")
 const blazelist = document.getElementById("blazelist")
 
@@ -90,6 +93,27 @@ blazeslider.addEventListener('input', () => {
     refreshBlaze()
 })
 
+document.getElementById('5rodsbutton').addEventListener('click', () => {
+    blazes = parseInt(fivelabel.innerText.split(" ")[0]) //todo make less jank
+    blazeslider.value = Math.min(Math.max(blazes, blazeslider.min), blazeslider.max)
+    blazeinput.value = blazes
+    refreshBlaze()
+})
+
+document.getElementById('6rodsbutton').addEventListener('click', () => {
+    blazes = parseInt(sixlabel.innerText.split(" ")[0]) 
+    blazeslider.value = Math.min(Math.max(blazes, blazeslider.min), blazeslider.max)
+    blazeinput.value = blazes
+    refreshBlaze()
+})
+
+document.getElementById('7rodsbutton').addEventListener('click', () => {
+    blazes = parseInt(sevenlabel.innerText.split(" ")[0]) 
+    blazeslider.value = Math.min(Math.max(blazes, blazeslider.min), blazeslider.max)
+    blazeinput.value = blazes
+    refreshBlaze()
+})
+
 async function load() {
     clearInputs()
     await fetchBarterTable()
@@ -115,6 +139,7 @@ async function fetchBarterTable() {
 
 function refreshSeed() {
     refreshGold()
+    refreshNBlazes()
     refreshBlaze()
     refreshGravel()
 }
@@ -185,6 +210,30 @@ function refreshBlaze() {
         row.appendChild(itemdisp)
         row.appendChild(amountdisp)
         blazeout.appendChild(row)
+    }
+}
+
+function refreshNBlazes() {
+    const rngstate = new RNGState(currseed)
+
+    fivelabel.innerText = ""
+    sixlabel.innerText = ""
+    sevenlabel.innerText = ""
+
+    let rods = 0n
+    for (let i=1; i < 1000; i++) {
+        const nextBlazeDrop = getNextBlazeDrop(rngstate.getRandom(RNGState.Type.BLAZE), i)
+        rods += nextBlazeDrop.amount
+        if (rods >= 5 && fivelabel.innerText == "") {
+            fivelabel.innerText = i + " blazes killed"
+        }
+        if (rods >= 6 && sixlabel.innerText == "") {
+            sixlabel.innerText = i + " blazes killed"
+        }
+        if (rods >= 7 && sevenlabel.innerText == "") {
+            sevenlabel.innerText = i + " blazes killed"
+            return;
+        }
     }
 }
 
