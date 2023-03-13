@@ -67,7 +67,7 @@ goldslider.addEventListener('input', () => {
     refreshGold()
 })
 
-for (let d of ['-9', '-1', '+1', '+9']) {
+for (let d of ['-9', '-1', '+1', '+9']) { 
     document.getElementById("gold"+d).addEventListener('click', () => {
         gold += parseInt(d)
         if (gold < 0) gold = 0
