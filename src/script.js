@@ -242,7 +242,7 @@ function refreshNBlazes() {
 
     let rods = 0n
     for (let i=1; i < 1000; i++) {
-        const nextBlazeDrop = getNextBlazeDrop(rngstate.getRandom(RNGState.Type.BLAZE), i)
+        const nextBlazeDrop = getNextBlazeDrop(rngstate.getRandom(RNGState.Type.BLAZE), i-1)
         rods += nextBlazeDrop.amount
         if (rods >= 5 && fivelabel.innerText == "") {
             fivelabel.innerText = i + " blazes killed"
@@ -260,7 +260,7 @@ function refreshNBlazes() {
 function getNextBlazeDrop(random, blaze) {
     //assume no looting
     //one function: set count 0 to 1
-    if (blaze > 20) return {'item': 'minecraft:blaze_rod', 'amount': 1n};
+    if (blaze > 20 && blaze < 32) return {'item': 'minecraft:blaze_rod', 'amount': 1n};
 
     let amount = helperNextInt(random, 0n, 1n)
     return {'item': 'minecraft:blaze_rod', 'amount': amount}
