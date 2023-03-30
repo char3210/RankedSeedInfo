@@ -24,13 +24,14 @@ class RNGState {
         'ENDER_MITE': 17,
         'RAIN_WITH_THUNDER': 18,
         'SPAWN': 19,
-        'PHANTOM': 20
+        'PHANTOM': 20,
+        'DEAD_BUSH': 21
     }
 
     randoms
 
     constructor(seed) {
-        seed += -32903251n;
+        seed += 4262064045n;
 
         this.randoms = []
         for (let type in RNGState.Type) {
