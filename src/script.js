@@ -182,6 +182,14 @@ function refreshGold() {
         const amountdisp = document.createElement('td')
         itemdisp.innerText = item
         amountdisp.innerText = res[item]
+        // hardcode some stuff
+        if (item == 'minecraft:string') {
+            amountdisp.innerText += ' (' + (Number(res[item])/12).toFixed(2) + ' B)'
+        } else if (item == 'minecraft:glowstone_dust') {
+            amountdisp.innerText += ' (' + (Number(res[item])/16).toFixed(2) + ' RA)'
+        } else if (item == 'minecraft:crying_obsidian') {
+            amountdisp.innerText += ' (' + (Number(res[item])/6).toFixed(2) + ' RA)'
+        }
         row.appendChild(itemdisp)
         row.appendChild(amountdisp)
         bartersout.appendChild(row)
