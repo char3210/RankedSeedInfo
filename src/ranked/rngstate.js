@@ -3,29 +3,41 @@
 
 
 class RNGState {
-    static Type = {
-        'BLAZE': 0,
-        'BLAZE_SPAWN': 1,
-        'BARTER': 2,
-        'ENDERMAN': 3,
-        'FLINT': 4,
-        'EYE': 5,
-        'SUS_STEW': 6,
-        'HOGLIN': 7,
-        'FOOD_RANDOM': 8,
-        'TRADE': 9,
-        'DRAGON_PERCH': 10,
-        'DRAGON_PATH': 11,
-        'DRAGON_HEIGHT': 12,
-        'CHICKEN': 13,
-        'SHEEP': 14,
-        'COW': 15,
-        'PIG': 16,
-        'ENDER_MITE': 17,
-        'RAIN_WITH_THUNDER': 18,
-        'SPAWN': 19,
-        'PHANTOM': 20,
-        'DEAD_BUSH': 21
+    static Types = ["BLAZE",
+        "BLAZE_SPAWN",
+        "MAGMA_CUBE_SPAWN",
+        "BARTER",
+        "ENDERMAN",
+        "FLINT",
+        "EYE",
+        "SUS_STEW",
+        "HOGLIN",
+        "FOOD_RANDOM",
+        "TRADE",
+        "DRAGON_STANDARD",
+        "DRAGON_PERCH",
+        "DRAGON_PATH",
+        "DRAGON_HEIGHT",
+        "CHICKEN",
+        "SHEEP",
+        "SHEEP_SHEARS",
+        "COW",
+        "PIG",
+        "ENDER_MITE",
+        "RAIN_WITH_THUNDER",
+        "SPAWN",
+        "PHANTOM",
+        "LEAVES",
+        "DEAD_BUSH",
+        "FORTRESS_SPAWN"];
+
+    static Type = {};
+    static {
+        let i = 0
+        for (let type of RNGState.Types) {
+            RNGState.Type[type] = i
+            i++
+        }
     }
 
     randoms

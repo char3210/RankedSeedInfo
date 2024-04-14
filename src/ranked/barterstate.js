@@ -27,10 +27,10 @@ class PiglinBarterState {
             this.pearlCount = PiglinBarterState.MAX_PEARL_COUNT;
             this.obsidianCount = PiglinBarterState.MAX_OBSIDIAN_COUNT;
         }
-        if (this.pearl == 0 && this.pearlCount > 0) {
+        if (this.pearl == 0 && this.pearlCount > 0 && !this.preventIncrease) {
             this.rollPearlIndex(random);
         }
-        if (this.obsidian == 0 && this.obsidianCount > 0) {
+        if (this.obsidian == 0 && this.obsidianCount > 0 && !this.preventIncrease) {
             this.rollObsidianIndex(random);
         }
         if (itemStack.item == 'minecraft:ender_pearl') {
@@ -44,15 +44,21 @@ class PiglinBarterState {
             return itemStack;
         }
         if (itemStack.item == 'minecraft:obsidian') {
-            this.rollObsidianIndex(random);
+            if (!this.preventIncrease) {
+                this.rollObsidianIndex(random);
+            }
             return itemStack;
         }
         if (this.pearl <= this.currentGuarantee && this.pearlCount >= 0) {
-            this.rollPearlIndex(random);
+            if (!this.preventIncrease) {
+                this.rollPearlIndex(random);
+            }
             return {'item': 'minecraft:ender_pearl', 'amount': random.nextInt(5n) + 4n};
         }
         if (this.obsidian <= this.currentGuarantee && this.obsidianCount >= 0) {
-            this.rollObsidianIndex(random);
+            if (!this.preventIncrease) {
+                this.rollObsidianIndex(random);
+            }
             return {'item': 'minecraft:obsidian', 'amount': 1};
         }
         return itemStack;
