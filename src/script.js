@@ -184,11 +184,11 @@ function refreshGold() {
         amountdisp.innerText = res[item]
         // hardcode some stuff
         if (item == 'minecraft:string') {
-            amountdisp.innerText += ' (' + (Number(res[item])/12).toFixed(2) + ' B)'
+            amountdisp.innerText += ' (' + (Number(res[item])/12).toFixed(0) + ' B)'
         } else if (item == 'minecraft:glowstone_dust') {
-            amountdisp.innerText += ' (' + (Number(res[item])/16).toFixed(2) + ' RA)'
+            amountdisp.innerText += ' (' + (Number(res[item])/16).toFixed(0) + ' RA)'
         } else if (item == 'minecraft:crying_obsidian') {
-            amountdisp.innerText += ' (' + (Number(res[item])/6).toFixed(2) + ' RA)'
+            amountdisp.innerText += ' (' + (Number(res[item])/6).toFixed(0) + ' RA)'
         }
         row.appendChild(itemdisp)
         row.appendChild(amountdisp)
