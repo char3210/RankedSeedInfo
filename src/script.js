@@ -294,7 +294,7 @@ function refreshGravel() {
     flintlist.appendChild(createIcon('img/flint.png', 'flint'))
 }
 
-function refreshGravel() {
+function refreshEyes() {
     const rngstate = new RNGState(currseed)
     const eyerandom = rngstate.getRandom(RNGState.Type.EYE)
 
