@@ -29,6 +29,8 @@ const blazelist = document.getElementById("blazelist")
 const flint = document.getElementById("flint")
 const flintlist = document.getElementById("flintlist")
 
+const eyelist = document.getElementById("eyelist")
+
 let entries
 
 let currseed = BigInt(DEFAULT_SEED)
@@ -162,6 +164,7 @@ function refreshSeed() {
     refreshNBlazes()
     refreshBlaze()
     refreshGravel()
+    refreshEyes()
 }
 
 function refreshGold() { 
@@ -289,6 +292,21 @@ function refreshGravel() {
         flintlist.appendChild(createIcon('img/gravel.png', 'gravel'))
     }
     flintlist.appendChild(createIcon('img/flint.png', 'flint'))
+}
+
+function refreshGravel() {
+    const rngstate = new RNGState(currseed)
+    const eyerandom = rngstate.getRandom(RNGState.Type.EYE)
+
+    eyelist.replaceChildren()
+    for (let i = 0; i < 5; i++) {
+        if (eyerandom.nextInt(5n) > 0) {
+            eyelist.appendChild(createIcon('img/eyeofender.png'))
+        } else {
+            eyelist.appendChild(createIcon('img/brokeneyeofender.png'))
+        }
+    }
+    
 }
 
 function createIcon(name, alt) {
