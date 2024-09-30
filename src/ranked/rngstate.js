@@ -3,7 +3,8 @@
 
 
 class RNGState {
-    static Types = ["BLAZE",
+    static Types = [
+        "BLAZE",
         "BLAZE_SPAWN",
         "MAGMA_CUBE_SPAWN",
         "BARTER",

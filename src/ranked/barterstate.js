@@ -4,74 +4,81 @@ class PiglinBarterState {
     static MAX_GUARANTEE = 72;
     static MAX_PEARL_COUNT = 3;
     static MAX_OBSIDIAN_COUNT = 6;
-    currentGuarantee = 0;
-    obsidianCount = PiglinBarterState.MAX_OBSIDIAN_COUNT;
-    pearlCount = PiglinBarterState.MAX_PEARL_COUNT;
-    pearl = 0;
-    obsidian = 0;
-    preventIncrease = false;
+    pearlTradeIndexes = []
+    obsidianTradeIndexes = []
+    currentTrades = 2147483647
+    rolling = false
+
+    refreshTradeIndexes(random) {
+        this.currentTrades = 0
+
+        let numbers = [...Array(PiglinBarterState.MAX_GUARANTEE).keys()]
+        this.shuffle(numbers, random)
+        console.log(numbers.slice())
+
+        this.pearlTradeIndexes.push(...numbers.splice(0, PiglinBarterState.MAX_PEARL_COUNT))
+        this.obsidianTradeIndexes.push(...numbers.splice(0, PiglinBarterState.MAX_OBSIDIAN_COUNT))
+    }
+    
+    shuffle(list, random) {
+        for (let i = list.length; i > 1; i--) {
+            this.swap(list, i-1, Number(random.nextInt(BigInt(i))))
+        }
+    }
+
+    swap(l, i, j) {
+        let tmp = l[j]
+        l[j] = l[i]
+        l[i] = tmp
+    }
 
     guaranteeItem(itemStack, random) {
         let newItem = this.guaranteeItem2(itemStack, random)
-        if (!this.preventIncrease) {
-            this.currentGuarantee++
+        if (!this.rolling) {
+            this.currentTrades++
         }
         return newItem
     }
 
     guaranteeItem2(itemStack, random) {
-        if (this.currentGuarantee == PiglinBarterState.MAX_GUARANTEE) {
-            this.currentGuarantee = 0;
-            this.pearl = 0;
-            this.obsidian = 0;
-            this.pearlCount = PiglinBarterState.MAX_PEARL_COUNT;
-            this.obsidianCount = PiglinBarterState.MAX_OBSIDIAN_COUNT;
-        }
-        if (this.pearl == 0 && this.pearlCount > 0 && !this.preventIncrease) {
-            this.rollPearlIndex(random);
-        }
-        if (this.obsidian == 0 && this.obsidianCount > 0 && !this.preventIncrease) {
-            this.rollObsidianIndex(random);
+        if (this.currentTrades >= PiglinBarterState.MAX_GUARANTEE) {
+            this.refreshTradeIndexes(random);
         }
         if (itemStack.item == 'minecraft:ender_pearl') {
-            if (this.pearlCount < 0) {
-                this.preventIncrease = true;
-                let newBarterItem = this.getBarteredItem(random);
-                this.preventIncrease = false;
-                return newBarterItem;
+            if (this.pearlTradeIndexes.length == 0) {
+                this.rolling = true
+                let newBarterItem = this.getBarteredItem(random)
+                this.rolling = false
+                return newBarterItem
             }
-            this.rollPearlIndex(random);
-            return itemStack;
+            this.pearlTradeIndexes.shift() // removes first element
+            return itemStack
         }
+
         if (itemStack.item == 'minecraft:obsidian') {
-            if (!this.preventIncrease) {
-                this.rollObsidianIndex(random);
+            if (this.obsidianTradeIndexes.length != 0) {
+                this.obsidianTradeIndexes.shift()
             }
-            return itemStack;
+            return itemStack
         }
-        if (this.pearl <= this.currentGuarantee && this.pearlCount >= 0) {
-            if (!this.preventIncrease) {
-                this.rollPearlIndex(random);
-            }
-            return {'item': 'minecraft:ender_pearl', 'amount': random.nextInt(5n) + 4n};
-        }
-        if (this.obsidian <= this.currentGuarantee && this.obsidianCount >= 0) {
-            if (!this.preventIncrease) {
-                this.rollObsidianIndex(random);
-            }
-            return {'item': 'minecraft:obsidian', 'amount': 1};
-        }
-        return itemStack;
-    }
 
-    rollPearlIndex(random) {
-        this.pearl = random.nextInt(BigInt(Math.max(1, PiglinBarterState.MAX_GUARANTEE - this.currentGuarantee - this.pearlCount))) + BigInt(this.currentGuarantee);
-        --this.pearlCount;
-    }
+        let pearlIndex = this.pearlTradeIndexes.indexOf(this.currentTrades)
+        if (pearlIndex != -1) {
+            if (!this.rolling) {
+                this.pearlTradeIndexes.splice(pearlIndex, 1)
+            }
+            return {'item': 'minecraft:ender_pearl', 'amount': Number(random.nextInt(5n)) + 4}
+        }
 
-    rollObsidianIndex(random) {
-        this.obsidian = random.nextInt(BigInt(Math.max(1, PiglinBarterState.MAX_GUARANTEE - this.currentGuarantee - this.obsidianCount))) + BigInt(this.currentGuarantee);
-        --this.obsidianCount;
+        let obbyIndex = this.obsidianTradeIndexes.indexOf(this.currentTrades)
+        if (obbyIndex != -1) {
+            if (!this.rolling) {
+                this.obsidianTradeIndexes.splice(obbyIndex, 1)
+            }
+            return {'item': 'minecraft:obsidian', 'amount': 1}
+        }
+
+        return itemStack
     }
 
     //injected version of getBarteredItem  
