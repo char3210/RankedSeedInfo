@@ -14,7 +14,6 @@ class PiglinBarterState {
 
         let numbers = [...Array(PiglinBarterState.MAX_GUARANTEE).keys()]
         this.shuffle(numbers, random)
-        console.log(numbers.slice())
 
         this.pearlTradeIndexes.push(...numbers.splice(0, PiglinBarterState.MAX_PEARL_COUNT))
         this.obsidianTradeIndexes.push(...numbers.splice(0, PiglinBarterState.MAX_OBSIDIAN_COUNT))

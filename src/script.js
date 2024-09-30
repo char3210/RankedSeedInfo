@@ -205,7 +205,7 @@ function getAmount(entry, random) {
     if (functions != null) {
         for (let f of functions) {
             if (f.function == "minecraft:set_count") {
-                amount = helperNextInt(random, BigInt(f.count.min), BigInt(f.count.max)) //UniformLootTableRange.java:50
+                amount = Number(helperNextInt(random, BigInt(f.count.min), BigInt(f.count.max))) //UniformLootTableRange.java:50
             } else if(f.function == "minecraft:enchant_randomly") {
                 random.nextInt(1n) //EnchantRandomlyLootFunction.java:68
                 helperNextInt(random, 1n, 3n) //EnchantRandomlyLootFunction.java:74 soul speed is 1 to 3
