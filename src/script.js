@@ -138,7 +138,9 @@ document.getElementById('7rodsbutton').addEventListener('click', () => {
 
 async function load() {
     clearInputs()
+    let a = getCurrentWeeklySeed()
     await fetchBarterTable()
+    await a
     refreshSeed()
 }
 
@@ -148,6 +150,17 @@ function clearInputs() {
     goldslider.value = '1'
     blazeinput.value = '1'
     blazeslider.value = '1'
+}
+
+async function getCurrentWeeklySeed() {
+    const response = await fetch('https://mcsrranked.com/api/weekly-race/0')
+    const json = await response.json()
+    if (json['status'] != 'success') {
+        console.log(json)
+        return
+    }
+    seedinput.value = json['data']['seed']['overworld']
+    seedinput.dispatchEvent(new Event('input'))
 }
 
 async function fetchBarterTable() {
