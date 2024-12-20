@@ -159,7 +159,7 @@ async function getCurrentWeeklySeed() {
         console.log(json)
         return
     }
-    seedinput.value = json['data']['seed']['overworld']
+    seedinput.value = json['data']['seed']['rng']
     seedinput.dispatchEvent(new Event('input'))
 }
 
