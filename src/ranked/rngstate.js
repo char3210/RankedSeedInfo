@@ -45,11 +45,12 @@ class RNGState {
 
     constructor(seed) {
         seed += 4262064045n;
+        let rngRandom = new JavaRandom(seed)
 
         this.randoms = []
         for (let type in RNGState.Type) {
             let random = new JavaRandom(0n)
-            random.seed = initialScramble(seed + BigInt(RNGState.Type[type]))
+            random.seed = initialScramble(rngRandom.nextLong())
             this.randoms.push(random)
         }
     }

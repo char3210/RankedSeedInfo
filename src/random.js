@@ -42,4 +42,14 @@ class JavaRandom {
     nextFloat() {//: Number
         return Number(this.next(24n)) / (1 << 24)
     }
+
+    nextLong() {
+        let a = this.next(32n);
+        let b = this.next(32n);
+        // addition is done in java int (32-bit signed)
+        if (b & (1n << 31n) != 0) {
+            b = b - (1n << 32n)
+        }
+        return (a << 32n) + b
+    }
 }
