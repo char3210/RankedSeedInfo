@@ -153,7 +153,7 @@ function clearInputs() {
 }
 
 async function getCurrentWeeklySeed() {
-    const response = await fetch('https://mcsrranked.com/api/weekly-race/0')
+    const response = await fetch('https://mcsrranked.com/api/weekly-race/')
     const json = await response.json()
     if (json['status'] != 'success') {
         console.log(json)
@@ -313,7 +313,7 @@ function refreshEyes() {
 
     eyelist.replaceChildren()
     for (let i = 0; i < 5; i++) {
-        if (eyerandom.nextInt(5n) > 0) {
+        if (i == 1 || eyerandom.nextInt(5n) > 0) {
             eyelist.appendChild(createIcon('img/eyeofender.png'))
         } else {
             eyelist.appendChild(createIcon('img/brokeneyeofender.png'))
