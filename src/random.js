@@ -47,7 +47,7 @@ class JavaRandom {
         let a = this.next(32n);
         let b = this.next(32n);
         // addition is done in java int (32-bit signed)
-        if (b & (1n << 31n) != 0) {
+        if ((b & (1n << 31n)) != 0n) {
             b = b - (1n << 32n)
         }
         return (a << 32n) + b
