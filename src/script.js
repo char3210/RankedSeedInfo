@@ -1,6 +1,7 @@
 "use strict";
 
 const DEFAULT_SEED = '-1747862978341114290'
+const SEED_QUERY_PARAM = 'seed'
 const WHITELISTED_ITEMS = [
     'minecraft:obsidian', 
     'minecraft:ender_pearl', 
@@ -44,6 +45,7 @@ seedinput.addEventListener('input', () => {
     }
 
     currseed = tempseed
+    updateSeedUrl(currseed)
     refreshSeed()
 })
 
@@ -138,9 +140,17 @@ document.getElementById('7rodsbutton').addEventListener('click', () => {
 
 async function load() {
     clearInputs()
-    let a = getCurrentWeeklySeed()
+    const urlSeed = getSeedFromUrl()
+    let weeklySeed
+    if (urlSeed == null) {
+        weeklySeed = getCurrentWeeklySeed()
+    } else {
+        currseed = urlSeed
+        seedinput.value = urlSeed.toString()
+    }
+
     await fetchBarterTable()
-    await a
+    await weeklySeed
     refreshSeed()
 }
 
@@ -159,8 +169,15 @@ async function getCurrentWeeklySeed() {
         console.log(json)
         return
     }
-    seedinput.value = json['data']['seed']['rng']
-    seedinput.dispatchEvent(new Event('input'))
+    const weeklySeed = parseLong(json['data']['seed']['rng'])
+    if (weeklySeed == null) {
+        console.log(json)
+        return
+    }
+
+    currseed = weeklySeed
+    seedinput.value = weeklySeed.toString()
+    updateSeedUrl(currseed)
 }
 
 async function fetchBarterTable() {
@@ -178,6 +195,25 @@ function refreshSeed() {
     refreshBlaze()
     refreshGravel()
     refreshEyes()
+}
+
+function getSeedFromUrl() {
+    const seed = new URLSearchParams(window.location.search).get(SEED_QUERY_PARAM)
+    if (seed == null) {
+        return null
+    }
+    return parseLong(seed.trim())
+}
+
+function updateSeedUrl(seed) {
+    const url = new URL(window.location.href)
+    const seedText = seed.toString()
+    if (url.searchParams.get(SEED_QUERY_PARAM) == seedText) {
+        return
+    }
+
+    url.searchParams.set(SEED_QUERY_PARAM, seedText)
+    history.replaceState(null, '', url)
 }
 
 function refreshGold() { 
